@@ -5,7 +5,9 @@
 
     date:           jun-2023
 
-    usage:          minimalist implementation of Logistic Regression model.
+    usage:          minimalist implementation of Support Vector Machine models.
+                    - Linear Kernel
+                    - RBF Kernel
 """
 import os
 import warnings
@@ -104,7 +106,6 @@ def linear_Kernel():
     x_train_scaled = scaling.transform(x_train)
     x_test_scaled = scaling.transform(x_test)
 
-    # Linear Kernel or linear decision boundary
     print("- training")
     svm = SVC(kernel="linear", probability=True)
     model = svm.fit(X=x_train_scaled, y=y_train)
@@ -117,7 +118,7 @@ def linear_Kernel():
     y_pred_test_svm = model.predict(x_test_scaled)
     metrics_score(y_test, y_pred_test_svm)
 
-    # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 42)
+    # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 40)
     optimal_threshold_svm = 0.40
 
     print("- remodeling on training data")
@@ -158,7 +159,7 @@ def rbf_Kernel():
     y_pred_test_svm = model.predict(x_test_scaled)
     metrics_score(y_test, y_pred_test_svm)
 
-    # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 42)
+    # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 41)
     optimal_threshold_svm = 0.41
 
     print("- remodeling on training data")
