@@ -20,6 +20,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.preprocessing import MinMaxScaler
+
 # module initializations
 sns.set()
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -59,6 +60,7 @@ def prepare_data():
         - split dependent / independent variables
         - split training / test data sets
     """
+    print("Preparing data sets")
     original_db = pd.read_csv(os.path.join(HERE, "data", "reservations-db.csv"))
 
     # need to be careful to only work with a **COPY** of the original
@@ -86,7 +88,7 @@ def prepare_data():
     return train_test_split(x, y, test_size=0.30, stratify=y, random_state=1)
 
 
-def linear_kernal():
+def linear_Kernel():
     """
     - create training and test data sets
     - create a Logistic Regression model
@@ -94,32 +96,40 @@ def linear_kernal():
     - generate confusion matrix and f-score for the training set
     - generate confusion matrix and f-score for the test set
     """
+    print("Linear Kernel")
     x_train, x_test, y_train, y_test = prepare_data()
 
-    scaling = MinMaxScaler(feature_range=(-1,1)).fit(x_train)
+    print("- scaling")
+    scaling = MinMaxScaler(feature_range=(-1, 1)).fit(x_train)
     x_train_scaled = scaling.transform(x_train)
     x_test_scaled = scaling.transform(x_test)
 
-    # Linear kernal or linear decision boundary
-    svm = SVC(kernel='linear', probability=True) 
-    model = svm.fit(X= x_train_scaled, y = y_train)
+    # Linear Kernel or linear decision boundary
+    print("- training")
+    svm = SVC(kernel="linear", probability=True)
+    model = svm.fit(X=x_train_scaled, y=y_train)
 
+    print("- modeling on training data")
     y_pred_train_svm = model.predict(x_train_scaled)
     metrics_score(y_train, y_pred_train_svm)
 
+    print("- modeling on test data")
     y_pred_test_svm = model.predict(x_test_scaled)
     metrics_score(y_test, y_pred_test_svm)
 
     # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 42)
-    optimal_threshold_svm=0.40
+    optimal_threshold_svm = 0.40
 
+    print("- remodeling on training data")
     y_pred_train_svm = model.predict_proba(x_train_scaled)
-    metrics_score(y_train, y_pred_train_svm[:,1]>optimal_threshold_svm)
+    metrics_score(y_train, y_pred_train_svm[:, 1] > optimal_threshold_svm)
 
+    print("- remodeling on test data")
     y_pred_test = model.predict_proba(x_test_scaled)
-    metrics_score(y_test, y_pred_test[:,1]>optimal_threshold_svm)
+    metrics_score(y_test, y_pred_test[:, 1] > optimal_threshold_svm)
 
-def rbf_kernal():
+
+def rbf_Kernel():
     """
     - create training and test data sets
     - create a Logistic Regression model
@@ -127,30 +137,39 @@ def rbf_kernal():
     - generate confusion matrix and f-score for the training set
     - generate confusion matrix and f-score for the test set
     """
+    print("RBF Kernel")
     x_train, x_test, y_train, y_test = prepare_data()
 
-    scaling = MinMaxScaler(feature_range=(-1,1)).fit(x_train)
+    print("- scaling")
+    scaling = MinMaxScaler(feature_range=(-1, 1)).fit(x_train)
     x_train_scaled = scaling.transform(x_train)
     x_test_scaled = scaling.transform(x_test)
 
-    # Linear kernal or linear decision boundary
-    svm_rbf=SVC(kernel='rbf',probability=True)
-    model = svm_rbf.fit(x_train_scaled,y_train)
+    # Linear Kernel or linear decision boundary
+    print("- training")
+    svm_rbf = SVC(kernel="rbf", probability=True)
+    model = svm_rbf.fit(x_train_scaled, y_train)
 
+    print("- modeling on training data")
     y_pred_train_svm = model.predict(x_train_scaled)
     metrics_score(y_train, y_pred_train_svm)
 
+    print("- modeling on test data")
     y_pred_test_svm = model.predict(x_test_scaled)
     metrics_score(y_test, y_pred_test_svm)
 
     # Set the optimal threshold (refer to the Jupyter Notebook to see how we arrived at 42)
-    optimal_threshold_svm=0.41
+    optimal_threshold_svm = 0.41
 
+    print("- remodeling on training data")
     y_pred_train_svm = model.predict_proba(x_train_scaled)
-    metrics_score(y_train, y_pred_train_svm[:,1]>optimal_threshold_svm)
+    metrics_score(y_train, y_pred_train_svm[:, 1] > optimal_threshold_svm)
 
+    print("- remodeling on test data")
     y_pred_test = model.predict_proba(x_test_scaled)
-    metrics_score(y_test, y_pred_test[:,1]>optimal_threshold_svm)
+    metrics_score(y_test, y_pred_test[:, 1] > optimal_threshold_svm)
+
 
 if __name__ == "__main__":
-    linear_kernal()
+    linear_Kernel()
+    rbf_Kernel()
